@@ -3,20 +3,22 @@ try {
 
     console.log('ajax loadin...')
 
-let base = 'localhost:8080/';
+let base = 'http://localhost:8080/';
 var ajax = {};
 
-ajax.get = (path='/', params='?')=>{
+ajax.get = (path='/', params='?', callback)=>{
     console.log('ajax.get...');
+    console.log(base+path+params)
 
-    var req = new XMLHttpRequest();
-    req.open('GET', 'base'+params, false);
-    req.send(null);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', base+path+params, false);
+    xhr.send(null);
 
     if (xhr.status != 200) {
         console.log( xhr.status + ': ' + xhr.statusText );
     } else {
-        console.log( xhr.responseText );
+        // console.log( xhr.responseText );
+        callback(xhr.responseText)
     }
 };
 
@@ -38,14 +40,14 @@ ajax.post = (path='/', data='Message from client', callback)=>{
     }
 };
 
-    ajax.postFile = (path='/', data, callback)=>{
+ajax.postFile = (path='/', params='?', data,  callback)=>{
         if(!data) return callback(new Error(''))
         console.log('ajax.postFile...');
         console.log('path: ', path);
 
         var longInt8View = new Uint8Array(data);
         var xhr = new XMLHttpRequest;
-        xhr.open("POST", path, false);
+        xhr.open("POST", path+params, false);
         xhr.send(longInt8View);
 
         if (xhr.status != 200) {
@@ -56,7 +58,24 @@ ajax.post = (path='/', data='Message from client', callback)=>{
             console.log( xhr.responseText );
             callback(null, xhr.responseText)
         }
-    };
+};
+
+
+ajax.delete = (path='/', params='?', callback)=>{
+        console.log('ajax.DELETE...');
+        console.log(base+path+params)
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('DELETE', base+path+params, false);
+        xhr.send(null);
+
+        if (xhr.status != 200) {
+            console.log( xhr.status + ': ' + xhr.statusText );
+        } else {
+            // console.log( xhr.responseText );
+            callback(xhr.responseText)
+        }
+};
 
 
 

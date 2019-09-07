@@ -9,15 +9,22 @@ try {
     }
 
     let ajaxError = (msg)=>{
-        errorpanel.innerHTML = 'AJAX ERROR: ' + msg.toString();
+        try{            errorpanel.innerHTML = 'AJAX ERROR: ' + JSON.stringify(msg);
+        }catch (e) {    errorpanel.innerHTML = 'AJAX ERROR: ' + msg.toString();}
         return true;
     }
 
     let handleAjax = (err, data)=>{
-        if (err) return  ajaxError(err);
-        succespanel.innerHTML = `User "${data.name}" ${data.msg} successeful !!!`
+        errorpanel.innerHTML = '';
+        succespanel.innerHTML = '';
+
+        if (err || !data || !data.name) return  ajaxError(err || data || "Some error!");
+
+        succespanel.innerHTML = `User "${data.name}" ${data.msg} successeful !!!`;
+        localStorage.setItem('name', data.name);
+        localStorage.setItem('token', data.token);
         setTimeout(()=>{
-            // window.location.href = `/users/${data.id}`;
+            window.location.href = `/images.html`;
         }, 1000)
     }
 
@@ -61,11 +68,18 @@ try {
     let inputs = Array.from( document.getElementsByTagName('input') );
     inputs.forEach((input)=> input.oninput = changeInput)
 
+    let logout = ()=>{
+        localStorage.setItem('name', '');
+        localStorage.setItem('token', '')
+        return false;
+    }
+
+    logoutbtn.onclick = logout;
+
     loginform.onsubmit = submitForm;
-
     sendbtnRegister.onclick = registration;
-
     disableBtns()
+
 
 
 }catch (e) {console.log(e)}

@@ -10,7 +10,7 @@ let setRegistrationRoutes = (routes)=>{
 
         let {name, password} = req.body;
         let images = [];
-        let token = 'secrettoken'+ Math.random();
+        let token = 'secrettoken_'+ (Math.random().toString().split('').splice(2).join(''));
 
         User.findOne({name: name}, (err, user)=>{
             if (err) return res.send({type: 'error', msg: 'Error during finding user !'});
